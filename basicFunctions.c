@@ -41,20 +41,34 @@ void basicFunctions() {
     if (strcmp(TXbuffer,"page MMDVM")==0) {
         page=0;
     }
-    if (strcmp(TXbuffer,"page DStar")==0) {
+    if (strcmp(TXbuffer,"page Info")==0) {
         page=1;
     }
-    if (strcmp(TXbuffer,"page DMR")==0) {
+    if (strcmp(TXbuffer,"page DStar")==0) {
         page=2;
     }
-    if (strcmp(TXbuffer,"page YSF")==0) {
+    if (strcmp(TXbuffer,"page DMR1")==0) {
         page=3;
     }
-    if (strcmp(TXbuffer,"page P25")==0) {
+    if (strcmp(TXbuffer,"page DMR2")==0) {
         page=4;
     }
-
-    if ((strncmp(TXbuffer,"page ",5)==0)&&(changepages==1)) {
+    if (strcmp(TXbuffer,"page YSF")==0) {
+        page=5;
+    }
+    if (strcmp(TXbuffer,"page P25")==0) {
+        page=6;
+    }
+    if (strcmp(TXbuffer,"page NXDN")==0) {
+        page=7;
+    }
+    if (strcmp(TXbuffer,"page SYSTEM1")==0) {
+        page=8;
+    }
+    if (strcmp(TXbuffer,"page SYSTEM2")==0) {
+        page=9;
+    }
+    if ((strncmp(TXbuffer,"page ",10)==0)&&(changepages==1)) {
         strcat(TXbuffer,"0");
     }
 
@@ -71,18 +85,18 @@ void basicFunctions() {
     if ((page==0)&&(strstr(TXbuffer,"MMDVM STOPPED")>0)){
         sprintf(TXbuffer, "t30.txt=\"\"");
         sendCommand(text);
-        sprintf(TXbuffer, "t2.txt=\"\"");
+        sprintf(TXbuffer, "t52.txt=\"\"");
     }
     // if date/time is sent, check IP interface from time to time:
     //   and disk free in %
-    if ((page==0)&&(strstr(TXbuffer,"t2.txt=")>0)&&(check++>100)) {
+    if ((page==0)&&(strstr(TXbuffer,"t52.txt=")>0)&&(check++>100)) {
         getNetworkInterface(ipaddr);
         netIsActive[0]=getInternetStatus(check);
-        sprintf(TXbuffer, "t3.txt=\"%s\"", ipaddr);
+        sprintf(TXbuffer, "t53.txt=\"%s\"", ipaddr);
         check=0;
     }
     // check temp & CPU freq (also not too often)
-    if ((page==0)&&(strstr(TXbuffer,"t2.txt=")>0)&&(check%8==0)) {
+    if ((page==0)&&(strstr(TXbuffer,"t52.txt=")>0)&&(check%8==0)) {
         FILE *deviceInfoFile;
         double val;
         //CPU temperature
@@ -195,7 +209,7 @@ void basicFunctions() {
     }
 
     //send TG name if found
-    if ((page==2)&&(strstr(TXbuffer,"t3.txt")!=NULL)) {
+    if ((page==2)&&(strstr(TXbuffer,"t53.txt")!=NULL)) {
         char *TGname;
         int nr,TGindex;
         sendCommand(TXbuffer);
@@ -218,7 +232,7 @@ void basicFunctions() {
     }
 
     //send user data if found
-    if ((page==2)&&(strstr(TXbuffer,"t2.txt")!=NULL)) {
+    if ((page==2)&&(strstr(TXbuffer,"t52.txt")!=NULL)) {
         int nr,user;
 
         sendCommand(TXbuffer);
@@ -257,6 +271,4 @@ void basicFunctions() {
         sprintf(text, "MMDVM.status.val=78");
         sendCommand(text);
         sendCommand("click S0,1");
-    }
 }
-
